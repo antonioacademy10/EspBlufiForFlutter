@@ -37,13 +37,15 @@
 - (instancetype)init {
   self = [super init];
   if (self) {
-    self.espFBYBleHelper = [ESPFBYBLEHelper share];
-      self.filterContent = [ESPDataConversion loadBlufiScanFilter];
+    self.filterContent = [ESPDataConversion loadBlufiScanFilter];
   }
   return self;
 }
 
 - (void)scanDeviceInfo {
+    if (self.espFBYBleHelper == nil) {
+        self.espFBYBleHelper = [ESPFBYBLEHelper share];
+    }
     [self.espFBYBleHelper startScan:^(ESPPeripheral * _Nonnull device) {
         
         if (device.name == nil) return;
@@ -60,6 +62,9 @@
 }
 
 -(void)stopScan {
+    if (self.espFBYBleHelper == nil) {
+        self.espFBYBleHelper = [ESPFBYBLEHelper share];
+    }
     [self.espFBYBleHelper stopScan];
     [self updateMessage:[self makeJsonWithCommand:@"stop_scan_ble" data:@"1"]];
 }
